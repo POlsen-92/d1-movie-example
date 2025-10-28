@@ -11,8 +11,55 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		return new Response('Hello World!');
-	},
-} satisfies ExportedHandler<Env>;
+import { Hono } from "hono"
+
+type Bindings = {
+	DB: D1Database
+}
+
+const app = new Hono<{ Bindings: Bindings }>()
+
+// GET /movies => return all movies
+app.get("/movies", async c => {
+	const resp = await c.env.DB
+		.prepare("select * from movies")
+		.all()
+
+	const movies = resp.results
+
+	return c.json(movies)
+})
+
+// GET /movies/:id => return individual movie
+app.get("/movies/:id", async c => {
+	const resp = await c.env.DB
+		.prepare("select * from movies WHERE id = ?")
+		.run()
+
+	const movies = resp.results
+
+	return c.json(movies)
+})
+
+// GET /movies/favorites => return 3 favorite movies (sorted by rating)
+app.get("/movies/favorites", async c => {
+	const resp = await c.env.DB
+		.prepare("select * from movies order by rating desc limit 3")
+		.all()
+
+	const movies = resp.results
+
+	return c.json(movies)
+})
+
+//PUT /movies/:id => re-rate a movie
+app.put("/movies/:id", async c =>{
+
+})
+
+//POST /movie => add a new movie
+app.post("/movie", async c => {
+
+})
+
+export default app

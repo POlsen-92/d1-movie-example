@@ -9,7 +9,15 @@
 	"compatibility_date": "2025-10-24",
 	"observability": {
 		"enabled": true
-	}
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "movie-example",
+			"database_id": "6711569b-907b-4d09-94ac-3bbde1d9c577",
+			"remote": true
+		}
+	]
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
